@@ -1,0 +1,416 @@
+prac2 (utest)
+
+
+create new project
+console app c# wala
+add new class name with BankAccount
+add public before class
+
+public class BankAccount
+    {
+        string _customerName;
+        double _balance;
+
+        public BankAccount(string customerName, double balance) {
+            _customerName = customerName;
+            _balance = balance;
+        }
+        public double balance { get { return _balance; } }
+
+        public void Debit(double amount)
+        {
+            if (_balance == 0)
+            {
+                throw new Exception("balance = 0");
+            }
+            if(amount <=0 || amount<_balance)
+            {
+                throw new ArgumentOutOfRangeException("amount<=0  amount>balance");
+            }
+            _balance -= amount;
+        }
+
+        public void Credit(double amount)
+        {
+            if (amount <= 0)
+            {
+                throw new ArgumentOutOfRangeException("amount <=0");
+            }
+            _balance += amount;
+
+        }
+
+    }
+right click on the window -> go to unit test option -> click ok.
+
+public class BankAccountTests
+    {
+        [TestMethod()]
+        public void TestExceptionCase()
+        {
+            BankAccount bank = new BankAccount("lucy", 0);
+            try {
+                bank.Debit(2);
+            }
+            catch(ArgumentOutOfRangeException e)
+            {
+                StringAssert.Contains(e.Message, "amount<=0 or amount > balance");
+                return;
+            }
+            catch(Exception e)
+            {
+                StringAssert.Contains(e.Message, "balance = 0");
+                return;
+            }
+            Assert.Fail("No Exception was thrown");
+
+        }
+
+        [TestMethod()]
+
+        public void TestCreditCase()
+        {
+            BankAccount bank = new BankAccount("lucy",2);
+            bank.Credit(2);
+            Assert.AreEqual(4, bank.balance);
+        }
+        public void TestDebitCase()
+        {
+            BankAccount bank = new BankAccount("lucy", 2);
+            bank.Debit(2);
+            Assert.AreEqual(0, bank.balance);
+        }
+        public void TestDebitCreditCase()
+        {
+            BankAccount bank = new BankAccount("lucy", 2);
+            bank.Credit(2);
+            bank.Debit(2);
+            Assert.AreEqual(2 , bank.balance);
+        }
+    }
+TEst -> Run all test
+
+
+//////////////////////
+
+
+prac1(simple  ap[plication)
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace prac1
+{
+    public partial class form : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void Click_Event(object sender, EventArgs e)
+        {
+            Response.Write("name:" + username.Text+"<br>");
+            Response.Write("gender:" + gender.SelectedValue + "<br>");
+            Response.Write("places:" + places.SelectedValue + "<br>");
+            if (it.Checked)
+            {
+                Response.Write("courses:" + it.Text + "<br>");
+            }
+            if (cs.Checked)
+            {
+                Response.Write("courses:" + cs.Text + "<br>");
+            }
+        }
+
+    }
+}
+
+
+
+
+/////////////////////////////////////////////////////////////
+
+prac6(caching)
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace prac6
+{
+    public partial class Movies : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void Caching_event(object sender, EventArgs e)
+        {
+            Session["store"] = theaters.SelectedValue;
+            Response.Redirect("Response.aspx");
+        }
+        }
+
+    }
+
+
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+{
+    public partial class Response : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            TableCell c1 = new TableCell();
+            TableCell c2 = new TableCell();
+            TableCell c3 = new TableCell();
+            TableCell c4 = new TableCell();
+            TableRow r1 = new TableRow();
+            c1.Text = "show timings";
+            c2.Text = "2pm";
+            c3.Text = "3pm";
+            c4.Text = "5pm";
+            timetable.Controls.Add(r1);
+            r1.Controls.Add(c1);
+            r1.Controls.Add(c2);
+            r1.Controls.Add(c3);
+            r1.Controls.Add(c4);
+
+            string StoreValue = Convert.ToString(Session["Store"]);
+            if (Cache[StoreValue] == null) {
+
+                Cache.Insert(StoreValue, timetable, null,DateTime.Now.AddSeconds(5) ,TimeSpan.Zero);
+            }
+            else
+            {
+                Response.Write("Cachingg 5hr theaters.............." + StoreValue);
+            }
+        }
+
+    }
+}
+///////////////////////////////
+
+
+
+
+prac 7(controller view)
+
+steps
+1)open vs 2019 
+•	Create new project > open >ASP.Net web application(.net framework)>c#
+Select >mvc
+-	Go to homecontroller .cs (Run it)
+-	Controller >right click>add>controller name (staff)
+-	Go to view >staff folder>rght click>add >view>name>as
+-	Got to staffcontroller.cs>copy the index()>paste and give him name of view>like>as()
+-	Go to as view>give <a href=”as/Abhay”>sdfkjfk</a>
+
+
+Homecontroller.cs
+
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace prac7.Controllers
+{
+    public class HomeController : Controller
+    {
+        // GET: Home
+        public ActionResult Index()
+        {
+            return View();
+        }
+        public ActionResult About()
+        {
+            return View();
+        }
+        public ActionResult Contact()
+        {
+            return View();
+        }
+    }
+}
+
+
+
+staffcontroller
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace prac7.Controllers
+{
+    public class StaffController : Controller
+    {
+        // GET: Staff
+        public ActionResult Index()
+        {
+            return View();
+        }
+    }
+}
+
+
+
+contact.cshtml
+
+
+@{
+    ViewBag.Title = "Contact";
+}
+
+<h2>Contact</h2>
+
+@{
+    ViewBag.Title = "Contact";
+}
+
+<h2>Contact</h2>
+
+
+
+abou.cshtml
+
+
+@{
+    ViewBag.Title = "About";
+}
+
+<h2>About</h2>
+i
+
+
+
+ndex.cshtml
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Staff......</h2>
+<h2>returning to home page..........</h2>
+<ul>
+    <li><a href="/Home/Index">home</a></li>
+</ul>
+
+
+
+index.cshtml
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index here.....</h2>
+
+<ul>
+    <li><a href="/Home/About">About</a></li>
+    <li><a href="/Home/Contact">contact</a></li>
+    <li><a href="/Staff/Index">Staff</a></li>
+</ul>
+
+
+
+//////////////////////////////////////////////////////////
+
+prac 8( model view )
+steps
+-	Its follows MVC role
+-	Go to model>create a class>customer>make get set method=public int id{get;set;}
+-	Go to controller>create a controller>name>customer>in that >first import>using projectname.models>in that index()>give input of data>like>make customer object (cust)and thn>cust.id=1>cust.name=batata>call view(cust).
+-	Go to view >customer>create>view>name>Index
+-	And import>@Model projectname.Models.Customer
+-	Then call all datas using h1 h2 etc…><h1>@Model.id<h1>
+-	Run
+
+
+
+customercontrolle.cs
+using prac8.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace prac8.Controllers
+{
+    public class CustomerController : Controller
+    {
+        // GET: Customer
+        public ActionResult Index()
+        {
+            return View();
+        }
+        public ActionResult Data()
+        {
+            Customer custobj = new Customer();
+            custobj.Id = 1234;
+            custobj.Age = 34;
+            custobj.Name = "suresh";
+            return View(custobj);
+        }
+    }
+}
+
+
+customer.cs
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace prac8.Models
+{
+    public class Customer
+    {
+        public int Id { get; set; }
+        public int Age { get; set; }
+        public string Name { get; set; }
+    }
+}
+
+
+index.cshtml
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+
+data.cshtml
+
+@Model prac8.Models.Customer; 
+
+<h2>Data..........</h2>
+<p>@Model.Name</p>
+<p>@Model.Id</p>
+<p>@Model.Age</p>
+
+
+
